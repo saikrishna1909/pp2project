@@ -51,6 +51,6 @@ public class ClassSubjectController extends HttpServlet {
 
     }
 
-    public void destroy() {
-    }
+	public void destroy() {
+	}
 }

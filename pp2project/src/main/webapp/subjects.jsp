@@ -1,141 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<%@ page import="java.util.List" %>
-<%@ page import="model.Subject" %>
-<%@ page import="model.Class" %>
-<%@ page import="model.Teacher" %>
-<%@ page import="model.SubjectFull" %>
+<%@ page import="java.util.List"%>
+<%@ page import="model.Subject"%>
+<%@ page import="model.Class"%>
+<%@ page import="model.Teacher"%>
+<%@ page import="model.SubjectFull"%>
 
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
 <body>
 
-<br />
-<div class="container">
-    <div class="col s12 m7">
-        <h2 class="header">Subject List</h2>
-        <div class="card horizontal">
-           
-            <div class="card-stacked">
-                <div class="card-content">
-    <table class="striped card-panel highlight" id="myTable">
-        <thead>
-        <tr>
-            <th class="center-align">Edit</th>
-            <th class="center-align">ID</th>
-            <th class="center-align">Subject Name</th>
-            <th class="center-align">Class Name</th>
-            <th class="center-align">Teacher</th>
-            <th class="center-align">Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            List<SubjectFull> subjectsList = (List<SubjectFull>) request.getAttribute("subjectsList");
+	<br />
+	<div>
+		<div>
+			<h2>Subject List</h2>
+			<div>
 
-            // Paint the rows of the subject table
-            for (SubjectFull subject : subjectsList) {
-                out.println("");
-                out.println("<tr><td class=\"center-align\">");
-                out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + subject.getSubjectId() +
-                        "\")'>" +
-                        "<i class=\"material-icons\">edit</i></a>");
-                out.println("</td><td cxlass=\"center-align\">&nbsp;&nbsp;");
-                out.println(subject.getSubjectId());
-                out.println("</td><td>");
-                out.println(subject.getSubjectName());
-                out.println("</td><td class=\"center-align\">");
-                out.println(subject.getClassName());
-                out.println("</td><td class=\"center-align\">");
-                out.println(subject.getTeacherName());
-                out.println("</td><td class=\"center-align\">");
-                out.println("<a href='javascript:fOpenDelete(\"" + subject.getSubjectId() +
-                        "\")'><i class=\"material-icons\">delete</i></a>");
-                out.println("</td></tr>");
-            }
-        %>
-        </tbody>
-    </table>
+				<div>
+					<div>
+						<table id="myTable">
+							<thead>
+								<tr>
+									<th>Edit</th>
+									<th>ID</th>
+									<th>Subject Name</th>
+									<th>Class Name</th>
+									<th>Teacher</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+								List<SubjectFull> subjectsList = (List<SubjectFull>) request.getAttribute("subjectsList");
+
+								// Paint the rows of the subject table
+								for (SubjectFull subject : subjectsList) {
+									out.println("");
+									out.println("<tr><td>");
+									out.println("<a  href='javascript:fOpenEdit(\"" + subject.getSubjectId() + "\")'>" + "edit</a>");
+									out.println("</td><td >&nbsp;&nbsp;");
+									out.println(subject.getSubjectId());
+									out.println("</td><td>");
+									out.println(subject.getSubjectName());
+									out.println("</td><td>");
+									out.println(subject.getClassName());
+									out.println("</td><td class=\"center-align\">");
+									out.println(subject.getTeacherName());
+									out.println("</td><td>");
+									out.println("<a href='javascript:fOpenDelete(\"" + subject.getSubjectId() + "\")'>delete</a>");
+									out.println("</td></tr>");
+								}
+								%>
+							</tbody>
+						</table>
 
 
-                </div>
-                <div class="card-action">
-                    <div class="col-md-12 center text-center">
-                        <span class="left" id="total_reg"></span>
-                        <ul class="pagination pager" id="myPager"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();"><i class="material-icons">add</i></a>
-</div>
-<a id='modalLink' class="waves-effect waves-light btn hide modal-trigger" href="#modal1">Modal</a>
-<!-- Modal Structure -->
-<div id="modal1" class="modal">
-    <form id="form1" class="col s12">
-    <div class="preloader-background" id="preloader">
-        <div class="preloader-wrapper big active">
-            <div class="spinner-layer spinner-blue-only">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-content">
-        <h4>Subject Detail</h4>
-        <div id="contenido">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="subjectId" name="subjectId" value="">
-                        <label for="subjectId" class="active">Subject</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <select id="teacherId" name="teacherId" class="select">
-                            <option value="" disabled selected>Select the subject's teacher</option>
+					</div>
+					<div>
+						<div>
+							<span class="left" id="total_reg"></span>
+							<ul id="myPager"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a href="javascript:fOpenNew();"><i class="material-icons">add</i></a>
+	</div>
 
-    <%
-        List<Teacher> teachersList = (List<Teacher>) request.getAttribute("teachersList");
+	<div id="modal1">
+		<form id="form1" class="col s12">
+			<div id="preloader">
+				<div>
+					<div>
+						<div>
+							<div></div>
+						</div>
+						<div>
+							<div></div>
+						</div>
+						<div>
+							<div></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<h4>Subject Detail</h4>
+				<div id="contenido">
+					<div class="row">
+						<div>
+							<input type="text" id="subjectId" name="subjectId" value="">
+							<label for="subjectId" class="active">Subject</label>
+						</div>
+					</div>
+					<div>
+						<div>
+							<select id="teacherId" name="teacherId">
+								<option value="" disabled selected>Select the subject's
+									teacher</option>
 
-        // Paint the rows of the subject table
-        for (Teacher teacher : teachersList) {
-            out.println("<option value=\"" + teacher.getTeacherId() + "\">");
-            out.println(teacher.getTeacherName());
-            out.println("</option>");
-        }
-    %>
-                        </select>
-                        <label for="teacherId" class="active">Subject's Teacher</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="subjectName" name="subjectName" value="">
-                        <label for="subjectName" class="active">Subject Name</label>
-                </div>
-            </div>
-                <input type="hidden" id="action" name="action" value="">
-                <input type="hidden" id="deleteSubjectId" name="deleteSubjectId" value="">
+								<%
+								List<Teacher> teachersList = (List<Teacher>) request.getAttribute("teachersList");
 
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-close waves-effect waves-light btn accent-color" type="submit"><i class="material-icons left">save
-        </i>Save Changes</button>
-    </div>
-    </form>
-</div>
+								// Paint the rows of the subject table
+								for (Teacher teacher : teachersList) {
+									out.println("<option value=\"" + teacher.getTeacherId() + "\">");
+									out.println(teacher.getTeacherName());
+									out.println("</option>");
+								}
+								%>
+							</select> <label for="teacherId">Subject's Teacher</label>
+						</div>
+					</div>
+					<div>
+						<div>
+							<input type="text" id="subjectName" name="subjectName" value="">
+							<label for="subjectName" class="active">Subject Name</label>
+						</div>
+					</div>
+					<input type="hidden" id="action" name="action" value=""> <input
+						type="hidden" id="deleteSubjectId" name="deleteSubjectId" value="">
 
-<script>
+				</div>
+			</div>
+			<div>
+				<button type="submit">Save Changes</button>
+			</div>
+		</form>
+	</div>
+
+	<script>
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -150,8 +146,8 @@
 </script>
 
 
-<!--  Scripts-->
-<script>
+	<!--  Scripts-->
+	<script>
     async function fOpenEdit(pId) {
 
         // Set the action
@@ -231,8 +227,7 @@
                 console.log("---> jsonString: " + jsonString);
                 document.querySelector("#subjectId").value = jsonObject.subjectId;
                 document.querySelector("#subjectName").value = jsonObject.subjectName;
-                // Display the modal, hide the spinner
-                //document.querySelector("#teacherId").value = jsonObject.teacherId;
+        
                 const teacherEl = document.getElementById("teacherId");
 
                 for(var i=0; i<teacherEl.options.length; i++){
@@ -357,22 +352,6 @@
     }
 </script>
 
-<script>
-    //Configuration of Modals
-    document.addEventListener('DOMContentLoaded', function () {
-        //Modal
-        var elems = document.querySelectorAll('.modal');
-        var options = {opacity: 0.5}//, onOpenStart: fOpenEdit};
-        var instances = M.Modal.init(elems, options);
-        var instance = M.Modal.getInstance(elems);
-
-        //Select
-        var elems = document.querySelectorAll('.select');
-        var options = {classes: ""}
-        var instances = M.FormSelect.init(elems, options);
-
-    });
-</script>
 
 </body>
 </html>

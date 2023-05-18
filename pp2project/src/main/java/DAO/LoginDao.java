@@ -8,9 +8,6 @@ import model.SQLState;
 import model.User;
 
 public interface LoginDao {
-    public boolean verifyCredentials(User user) throws SQLException;
+	public boolean verifyCredentials(User user) throws SQLException;
 
 }
-
-
- 

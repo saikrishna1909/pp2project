@@ -1,100 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<%@ page import="java.util.List" %>
-<%@ page import="model.Class" %>
+<%@ page import="java.util.List"%>
+<%@ page import="model.Class"%>
 
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
 
 
 <body>
 
-<br /><br />
-<div class="container">
-    <div class="col s12 m7">
-        <h2 class="header">Classes</h2>
-        <div class="card horizontal">
-            
-            <div class="card-stacked">
-                <div class="card-content">
+	<br />
+	<br />
+	<div>
+		<div>
+			<h2>Classes</h2>
+			<div>
 
-    <table class="striped card-panel highlight" id="myTable">
-        <thead>
-        <tr>
-            <th class="center-align">Edit</th>
-            <th class="center-align">ID</th>
-            <th class="center-align">Class Name</th>
-            <th class="center-align">Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
+				<div>
+					<div>
 
-                    List<Class> clasesList = (List<Class>) request.getAttribute("classesList");
+						<table id="myTable">
+							<thead>
+								<tr>
+									<th>Edit</th>
+									<th>ID</th>
+									<th>Class Name</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+								List<Class> clasesList = (List<Class>) request.getAttribute("classesList");
 
-                    // Paint the rows of the clase table
-                    for (Class clase : clasesList) {
-                        out.println("");
-                        out.println("<tr><td class=\"center-align\">");
-                        out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + clase.getClassId() +
-                                "\")'>" +
-                                "<i class=\"material-icons\">edit</i></a>");
-                        out.println("</td><td class=\"center-align\">");
-                        out.println(clase.getClassId());
-                        out.println("</td><td>");
-                        out.println(clase.getClassName());
+								// Paint the rows of the clase table
+								for (Class clase : clasesList) {
+									out.println("");
+									out.println("<tr><td >");
+									out.println("<a href='javascript:fOpenEdit(\"" + clase.getClassId() + "\")'>" + "edit</a>");
+									out.println("</td><td>");
+									out.println(clase.getClassId());
+									out.println("</td><td>");
+									out.println(clase.getClassName());
 
-                        out.println("</td><td class=\"center-align\">");
-                        out.println("<a href='javascript:fOpenDelete(\"" + clase.getClassId() +
-                                "\")'><i class=\"material-icons\">delete</i></a>");
-                        out.println("</td></tr>");
-                    }
-        %>
-        </tbody>
-    </table>
+									out.println("</td><td >");
+									out.println("<a href='javascript:fOpenDelete(\"" + clase.getClassId() + "\")'>delete</a>");
+									out.println("</td></tr>");
+								}
+								%>
+							</tbody>
+						</table>
 
 
-                </div>
-                
-            </div>
-        </div>
-    </div>
-    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();">add</a>
-</div>
+					</div>
 
-<!-- Modal Structure -->
-<div id="modal1" class="modal">
-    <form id="form1" class="col s12">
+				</div>
+			</div>
+		</div>
+		<a href="javascript:fOpenNew();">add</a>
+	</div>
 
-    <div class="modal-content">
-        <h4>Class Detail</h4>
-        <div id="contenido">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="classId" name="classId" value="">
-                        <label for="classId" class="active">Class</label>
-                    </div>
-                </div>
+	<!-- Modal Structure -->
+	<div>
+		<form id="form1">
 
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="className" name="className" value="">
-                        <label for="className" class="active">Class Name</label>
-                </div>
-            </div>
-                <input type="hidden" id="action" name="action" value="">
-                <input type="hidden" id="deleteClassId" name="deleteClassId" value="">
+			<div>
+				<h4>Class Detail</h4>
+				<div>
+					<div>
+						<div>
+							<input type="text" id="classId" name="classId" value="">
+							<label for="classId" class="active">Class</label>
+						</div>
+					</div>
 
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-close waves-effect waves-light btn accent-color" type="submit"><i class="material-icons left">save
-        </i>Save Changes</button>
-    </div>
-    </form>
-</div>
+					<div>
+						<div>
+							<input type="text" id="className" name="className" value="">
+							<label for="className" class="active">Class Name</label>
+						</div>
+					</div>
+					<input type="hidden" id="action" name="action" value=""> <input
+						type="hidden" id="deleteClassId" name="deleteClassId" value="">
 
-<script>
+				</div>
+			</div>
+			<div>
+				<button type="submit">Save Changes</button>
+			</div>
+		</form>
+	</div>
+
+	<script>
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -109,8 +106,8 @@
 </script>
 
 
-<!--  Scripts-->
-<script>
+	<!--  Scripts-->
+	<script>
     async function fOpenEdit(pId) {
 
         // Set the action

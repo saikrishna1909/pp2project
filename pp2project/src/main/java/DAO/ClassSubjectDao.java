@@ -6,7 +6,5 @@ import java.util.List;
 import model.ClassSubject;
 
 public interface ClassSubjectDao {
-    public List<ClassSubject> getAllClassSubjects() throws SQLException;
+	public List<ClassSubject> getAllClassSubjects() throws SQLException;
 }
-
-

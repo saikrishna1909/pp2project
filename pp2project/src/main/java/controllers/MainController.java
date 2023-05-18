@@ -16,27 +16,22 @@ import model.User;
 @WebServlet("/main-controller")
 public class MainController extends HttpServlet {
 
-    public void init() {
-        //
-    }
+	public void init() {
+		//
+	}
 
-    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+		String page = (request.getParameter("page") == null) ? "" : request.getParameter("page");
+		page = page.equals("") ? "dashboard" : page;
 
+		System.out.println("page: " + page);
 
+		response.sendRedirect(page + "-controller");
 
-            String page = (request.getParameter("page") == null) ? "" : request.getParameter("page");
-            page = page.equals("") ? "dashboard" : page;
+	}
 
-            System.out.println("page: " + page);
-
-
-                response.sendRedirect(page + "-controller");
-
-
-    }
-
-    public void destroy() {
-        //
-    }
+	public void destroy() {
+		//
+	}
 }

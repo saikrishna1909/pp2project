@@ -1,169 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-<%@ page import="java.util.List" %>
-<%@ page import="model.Subject" %>
-<%@ page import="model.Class" %>
-<%@ page import="model.Teacher" %>
-<%@ page import="model.SubjectPerClass" %>
+<%@ page import="java.util.List"%>
+<%@ page import="model.Subject"%>
+<%@ page import="model.Class"%>
+<%@ page import="model.Teacher"%>
+<%@ page import="model.SubjectPerClass"%>
 
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
 <body>
-<br/>
-<div class="container">
-    <div >
-        <h2 >Subjects Per Class</h2>
-        <div >
-            <div >
-                <div>
+	<br />
+	<div class="container">
+		<div>
+			<h2>Subjects Per Class</h2>
+			<div>
+				<div>
+					<div>
 
-                    <h4 >Classes</h4>
-                    <table >
-                        <thead>
-                        <tr>
-                            <th class="center-align">ID</th>
-                            <th class="center-align">Class Name</th>
-                            <th class="center-align">Choose</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <%
-                        
+						<h4>Classes</h4>
+						<table>
+							<thead>
+								<tr>
+									<th class="center-align">ID</th>
+									<th class="center-align">Class Name</th>
+									<th class="center-align">Choose</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+								List<Class> classesList = (List<Class>) request.getAttribute("classesList");
+								Class claseSelected = (Class) request.getAttribute("claseSelected");
 
-                                                    List<Class> classesList = (List<Class>) request.getAttribute("classesList");
-                                                    Class claseSelected = (Class) request.getAttribute("claseSelected");
-
-                                                    // Paint the rows of the subject table
-                                                    for (Class clase : classesList) {
-                                                        out.println("<tr>");
-                                                        out.println("<td class=\"center-align\">" + clase.getClassId());
-                                                        out.println("</td><td class=\"center-align\">");
-                                                        out.println(clase.getClassName());
-                                                        out.println("<td class=\"center-align\">" +
-                                                                "<a class=\"waves-effect waves-light btn-small accent-color\" " +
-                                                                "href=\"/pp2project/subjects-per-class-controller?pClaseId=" + clase.getClassId() + "&pClaseName=" + clase.getClassName() + "\">" +
-                                                                "<i class=\"material-icons right\">forward</i>" + clase.getClassName() + "</a>");
-                                                        out.println("</td><td>");
-                                                        out.println("</td></tr>");
-                                                    }
-                        %>
-                        </tbody>
-                    </table>
+								// Paint the rows of the subject table
+								for (Class clase : classesList) {
+									out.println("<tr>");
+									out.println("<td class=\"center-align\">" + clase.getClassId());
+									out.println("</td><td class=\"center-align\">");
+									out.println(clase.getClassName());
+									out.println("<td class=\"center-align\">" + "<a class=\"waves-effect waves-light btn-small accent-color\" "
+									+ "href=\"/pp2project/subjects-per-class-controller?pClaseId=" + clase.getClassId() + "&pClaseName="
+									+ clase.getClassName() + "\">" + "<i class=\"material-icons right\">forward</i>" + clase.getClassName()
+									+ "</a>");
+									out.println("</td><td>");
+									out.println("</td></tr>");
+								}
+								%>
+							</tbody>
+						</table>
 
 
-                </div>
-                <hr>
-            </div>
-            <div class="card-stacked">
-                <form id="form1" class="col s12">
-                <div class="card-content">
-                    <h4 class="header">Subjects of <%=claseSelected.getClassName()%>
-                    </h4>
-                    <table class="striped card-panel highlight light-primary-color" id="myTable">
-                        <thead>
-                        <tr>
-                            <th class="center-align">ID</th>
-                            <th class="center-align">Subject Name</th>
-                            <th class="center-align">Delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <%
-                            List<SubjectPerClass> subjectsPerClassList =
-                                    (List<SubjectPerClass>) request.getAttribute("subjectsPerClassList");
+					</div>
+					<hr>
+				</div>
+				<div class="card-stacked">
+					<form id="form1" class="col s12">
+						<div class="card-content">
+							<h4 class="header">
+								Subjects of
+								<%=claseSelected.getClassName()%>
+							</h4>
+							<table class="striped card-panel highlight light-primary-color"
+								id="myTable">
+								<thead>
+									<tr>
+										<th class="center-align">ID</th>
+										<th class="center-align">Subject Name</th>
+										<th class="center-align">Delete</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%
+									List<SubjectPerClass> subjectsPerClassList = (List<SubjectPerClass>) request.getAttribute("subjectsPerClassList");
 
-                            // Paint the rows of the subject table
-                            for (SubjectPerClass subjectPerClass : subjectsPerClassList) {
-                                out.println("");
-                                out.println("<tr><td class=\"center-align\">");
-                                out.println(subjectPerClass.getSubjectId());
-                                out.println("</td><td>");
-                                out.println(subjectPerClass.getSubjectName());
-                                out.println("</td><td class=\"center-align\">");
-                                out.println("<a href='javascript:fOpenDelete(" +
-                                        "\"" + subjectPerClass.getClassId() + "\", " +
-                                        "\"" + subjectPerClass.getSubjectId() + "\", " +
-                                        "\"" + subjectPerClass.getSubjectName() + "\")'>" +
-                                        "<i class=\"material-icons\">delete</i></a>");
-                                out.println("</td></tr>");
-                            }
-                        %>
-                        </tbody>
-                    </table>
+									// Paint the rows of the subject table
+									for (SubjectPerClass subjectPerClass : subjectsPerClassList) {
+										out.println("");
+										out.println("<tr><td class=\"center-align\">");
+										out.println(subjectPerClass.getSubjectId());
+										out.println("</td><td>");
+										out.println(subjectPerClass.getSubjectName());
+										out.println("</td><td class=\"center-align\">");
+										out.println("<a href='javascript:fOpenDelete(" + "\"" + subjectPerClass.getClassId() + "\", " + "\""
+										+ subjectPerClass.getSubjectId() + "\", " + "\"" + subjectPerClass.getSubjectName() + "\")'>"
+										+ "<i class=\"material-icons\">delete</i></a>");
+										out.println("</td></tr>");
+									}
+									%>
+								</tbody>
+							</table>
 
 
-                </div>
-            </div>
-        </div>
-    </div>
-    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenSubjectsAvailable();">
-        <i class="material-icons">add</i></a>
-        <hr>
-        </form>
-</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		<a class="btn-floating btn-large right waves-effect waves-light red"
+			href="javascript:fOpenSubjectsAvailable();"> <i
+			class="material-icons">add</i></a>
+		<hr>
+		</form>
+	</div>
 
-<!-- Modal Structure -->
-<div id="modal1" class="modal">
-    <form id="form1" class="col s12">
-        
-        <div class="modal-content">
-            <h4>Subjects Available</h4>
-            <div id="contenido">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <select id="subjectId" name="subjectId" class="select">
-                            <option value="" disables selected>Select the available subject</option>
+	<!-- Modal Structure -->
+	<div id="modal1" class="modal">
+		<form id="form1" class="col s12">
 
-                            <%
-                                List<Subject> subjectsList = (List<Subject>) request.getAttribute("subjectsAvailableList");
+			<div class="modal-content">
+				<h4>Subjects Available</h4>
+				<div id="contenido">
+					<div class="row">
+						<div class="input-field col s12">
+							<select id="subjectId" name="subjectId" class="select">
+								<option value="" disables selected>Select the available
+									subject</option>
 
-                                // Paint the rows of the subject table
-                                for (Subject subject : subjectsList) {
-                                    out.println("<option value=\"" + subject.getSubjectId() + "\">");
-                                    out.println(subject.getSubjectName());
-                                    out.println("</option>");
-                                }
-                            %>
-                        </select>
-                        <label for="subjectId" class="active">Subjects Available</label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="modal-close waves-effect waves-light btn accent-color" type="submit">Save Changes
-                    </button>
-                </div>
-            </div>
-            <input type="text" id="action" name="action" value="">
-            <input type="text" id="classId" name="classId" value="<%=claseSelected.getClassId()%>">
-        </div>
-    </form>
-    <hr>
-</div>
+								<%
+								List<Subject> subjectsList = (List<Subject>) request.getAttribute("subjectsAvailableList");
 
-<div id="modal2" class="modal">
-    <form id="form2" class="col s12">
-       
-        <div class="modal-content">
-            <h4>Delete Subject from Class</h4>
-            <br />
-            <p id="card-text">
-                Click <b>SAVE CHANGES</b> if you want to remove the subject.
-            </p>
-        </div>
-        <div class="modal-footer">
-            <button class="modal-close waves-effect waves-light btn accent-color" type="submit">
-                <i class="material-icons left">save</i>Save Changes
-            </button>
-        </div>
-        <input type="hidden" id="action" name="action" value="">
-        <input type="hidden" id="deleteClassId" name="deleteClassId" value="<%=claseSelected.getClassId()%>">
-        <input type="hidden" id="deleteSubjectId" name="deleteSubjectId" value="">
-        <input type="hidden" id="deleteSubjectName" name="deleteSubjectName" value="">
-    </form><br>
-    <hr>
-</div>
+								// Paint the rows of the subject table
+								for (Subject subject : subjectsList) {
+									out.println("<option value=\"" + subject.getSubjectId() + "\">");
+									out.println(subject.getSubjectName());
+									out.println("</option>");
+								}
+								%>
+							</select> <label for="subjectId" class="active">Subjects Available</label>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button
+							class="modal-close waves-effect waves-light btn accent-color"
+							type="submit">Save Changes</button>
+					</div>
+				</div>
+				<input type="text" id="action" name="action" value=""> <input
+					type="text" id="classId" name="classId"
+					value="<%=claseSelected.getClassId()%>">
+			</div>
+		</form>
+		<hr>
+	</div>
 
-<script>
+	<div id="modal2" class="modal">
+		<form id="form2" class="col s12">
+
+			<div class="modal-content">
+				<h4>Delete Subject from Class</h4>
+				<br />
+				<p id="card-text">
+					Click <b>SAVE CHANGES</b> if you want to remove the subject.
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="modal-close waves-effect waves-light btn accent-color"
+					type="submit">
+					<i class="material-icons left">save</i>Save Changes
+				</button>
+			</div>
+			<input type="hidden" id="action" name="action" value=""> <input
+				type="hidden" id="deleteClassId" name="deleteClassId"
+				value="<%=claseSelected.getClassId()%>"> <input
+				type="hidden" id="deleteSubjectId" name="deleteSubjectId" value="">
+			<input type="hidden" id="deleteSubjectName" name="deleteSubjectName"
+				value="">
+		</form>
+		<br>
+		<hr>
+	</div>
+
+	<script>
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -190,8 +197,8 @@
 </script>
 
 
-<!--  Scripts-->
-<script>
+	<!--  Scripts-->
+	<script>
     async function fOpenSubjectsAvailable() {
 
         // Set the action

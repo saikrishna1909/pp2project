@@ -1,62 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<%@ page import="java.util.List" %>
-<%@ page import="model.Student" %>
-<%@ page import="model.Class" %>
-<%@ page import="model.ClassFull" %>
+<%@ page import="java.util.List"%>
+<%@ page import="model.Student"%>
+<%@ page import="model.Class"%>
+<%@ page import="model.ClassFull"%>
 
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
 
 
 <body>
 
 
 
-<br /><br />
-<div class="container">
-    <h3>Class Report</h3>
-    <br />
-    <table class="striped card-panel highlight">
-        <thead>
-        <tr>
-            <th class="center-align">Class Id</th>
-            <th class="center-align">Class Name</th>
-            <th class="center-align">Student Id</th>
-            <th class="center-align">Student Name</th>
-<%--            <th class="center-align">Teacher Id</th>--%>
-            <th class="center-align">Teacher Name</th>
-            <th class="center-align">Subject</th>
-            <th class="center-align">Subject CODE</th>
+	<br />
+	<br />
+	<div class="container">
+		<h3>Class Report</h3>
+		<br />
+		<table class="striped card-panel highlight">
+			<thead>
+				<tr>
+					<th class="center-align">Class Id</th>
+					<th class="center-align">Class Name</th>
+					<th class="center-align">Student Id</th>
+					<th class="center-align">Student Name</th>
+					<%--            <th class="center-align">Teacher Id</th>--%>
+					<th class="center-align">Teacher Name</th>
+					<th class="center-align">Subject</th>
+					<th class="center-align">Subject CODE</th>
 
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            List<ClassFull> studentsList = (List<ClassFull>) request.getAttribute("studentsList");
+				</tr>
+			</thead>
+			<tbody>
+				<%
+				List<ClassFull> studentsList = (List<ClassFull>) request.getAttribute("studentsList");
 
-            // Paint the rows of the student table
-            for (ClassFull student : studentsList) {
-                out.println("<tr>");
-                out.println("<td class=\"center-align\">"+student.getClassId()+"</td>");
-                out.println("<td class=\"center-align\">"+student.getClassName()+"</td>");
-                out.println("<td class=\"center-align\">"+student.getStudentId()+"</td>");
-                out.println("<td class=\"center-align\">"+student.getStudentName()+"</td>");
-//                out.println("<td class=\"center-align\">"+student.getTeacherId()+"</td>");
-                out.println("<td class=\"center-align\">"+student.getTeacherName()+"</td>");
-                out.println("<td class=\"center-align\">"+student.getSubjectName()+"</td>");
-                out.println("<td class=\"center-align\">"+student.getSubjectId()+"</td>");
+				// Paint the rows of the student table
+				for (ClassFull student : studentsList) {
+					out.println("<tr>");
+					out.println("<td class=\"center-align\">" + student.getClassId() + "</td>");
+					out.println("<td class=\"center-align\">" + student.getClassName() + "</td>");
+					out.println("<td class=\"center-align\">" + student.getStudentId() + "</td>");
+					out.println("<td class=\"center-align\">" + student.getStudentName() + "</td>");
+					//                out.println("<td class=\"center-align\">"+student.getTeacherId()+"</td>");
+					out.println("<td class=\"center-align\">" + student.getTeacherName() + "</td>");
+					out.println("<td class=\"center-align\">" + student.getSubjectName() + "</td>");
+					out.println("<td class=\"center-align\">" + student.getSubjectId() + "</td>");
 
-                out.println("</tr>");
-            }
-        %>
-        </tbody>
-    </table>
+					out.println("</tr>");
+				}
+				%>
+			</tbody>
+		</table>
 
-</div>
+	</div>
 
 
-<script>
+	<script>
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -71,8 +73,8 @@
 </script>
 
 
-<!--  Scripts-->
-<script>
+	<!--  Scripts-->
+	<script>
     async function fOpenEdit(pId) {
 
         // Set the action
@@ -278,7 +280,7 @@
     }
 </script>
 
-<script>
+	<script>
     //Configuration of Modals
     document.addEventListener('DOMContentLoaded', function () {
         //Modal

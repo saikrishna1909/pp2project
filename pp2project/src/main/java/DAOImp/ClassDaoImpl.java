@@ -15,163 +15,148 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ClassDaoImpl implements ClassDao {
-    List<Class> classes = new ArrayList<>();
-    Class clas = null;
-    Connection conn;
+	List<Class> classes = new ArrayList<>();
+	Class clas = null;
+	Connection conn;
 
-    public ClassDaoImpl() throws SQLException, ClassNotFoundException {
-        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
-        this.conn = databaseConnection.getConnection();
-    }
+	public ClassDaoImpl() throws SQLException, ClassNotFoundException {
+		DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
+		this.conn = databaseConnection.getConnection();
+	}
 
+	public List<Class> getAllClasses() throws SQLException {
+		Statement st = this.conn.createStatement();
+		ResultSet rs = st.executeQuery("select classes.class_id, classes.class_name from classes");
+		while (rs.next()) {
+			String classId = rs.getString("class_id");
+			String className = rs.getString("class_name");
+			clas = new Class(classId, className);
+			this.classes.add(clas);
+			System.out.format(" ----> %s, %s\n", classId, className);
+		}
+		st.close();
+		return this.classes;
+	}
 
-    public List<Class> getAllClasses() throws SQLException {
-        Statement st = this.conn.createStatement();
-        ResultSet rs = st.executeQuery("select classes.class_id, classes.class_name from classes");
+	public model.Class fetchOneClass(String id) {
+		try {
+			Statement st = this.conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM classes where class_id = " + id);
+			System.out.println("---> SELECT * FROM classes where class_id = " + id);
+			while (rs.next()) {
+				String classId = rs.getString("class_id");
+				String className = rs.getString("class_name");
+				clas = new Class(classId, className);
+			}
+			st.close();
+		} catch (SQLException e) {
+			System.out.println("ClaseDaoImp > fetchOneClase > " + e.getSQLState() + " - " + e.getMessage());
+		}
+		return this.clas;
+	}
 
-        while (rs.next()) {
-            String classId = rs.getString("class_id");
-            String className = rs.getString("class_name");
-            clas = new Class(classId, className);
-            this.classes.add(clas);
-            System.out.format(" ----> %s, %s\n", classId, className);
-        }
+	@Override
+	public SQLState deleteOneClass(JSONObject jsonObject) throws JSONException {
 
-        st.close();
-        return this.classes;
-    }
+		SQLState sqlState = new SQLState();
+		System.out.println("-----> deleteOneClase: ");
+		try {
+			// SQL String
+			String delete = " delete from  classes  where class_id = ?";
+			System.out.println("----> delete: " + delete);
 
-    public model.Class fetchOneClass(String id) {
-        try {
-            Statement st = this.conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM classes where class_id = " + id);
-            System.out.println("---> SELECT * FROM classes where class_id = " + id);
-            while (rs.next()) {
-                String classId = rs.getString("class_id");
-                String className = rs.getString("class_name");
-                clas = new Class(classId, className);
-            }
+			PreparedStatement st = this.conn.prepareStatement(delete);
+			st.setInt(1, (jsonObject).getInt("classId"));
 
-            st.close();
-        } catch (SQLException e) {
-            System.out.println("ClaseDaoImp > fetchOneClase > " + e.getSQLState() + " - " + e.getMessage());
-        }
-        return this.clas;
-    }
+			// Update the database
+			int code = st.executeUpdate();
+			System.out.println("----> code: " + code);
+			// Close the statement
+			st.close();
 
+			if (code > 0) {
+				sqlState.setCode(0);
+				sqlState.setMessage("Clase deleted successfully");
+			} else {
+				sqlState.setCode(-1);
+				sqlState.setMessage("Error when trying to delete Clase.");
+			}
+			return sqlState;
 
-    @Override
-    public SQLState deleteOneClass(JSONObject jsonObject) throws JSONException {
+		} catch (SQLException err) {
+			sqlState.setCode(-1);
+			sqlState.setMessage(err.getMessage());
+			return sqlState;
+		}
+	}
 
-        SQLState sqlState = new SQLState();
-        System.out.println("-----> deleteOneClase: ");
-        try {
-            // SQL String
-            String delete = " delete from  classes  where class_id = ?";
-            System.out.println("----> delete: " + delete);
+	@Override
+	public SQLState updateOneClass(JSONObject jsonObject) throws JSONException {
 
-            PreparedStatement st = this.conn.prepareStatement(delete);
-            st.setInt(1, ( jsonObject).getInt("classId"));
+		SQLState sqlState = new SQLState();
+		System.out.println("-----> updateOneClase: ");
+		try {
+			// SQL String
+			String update = " update classes  set class_name = ? where class_id = ?";
+			System.out.println("----> Update: " + update);
+			PreparedStatement st = this.conn.prepareStatement(update);
+			System.out.println("classId: " + (jsonObject).getString("classId"));
+			System.out.println("className: " + (jsonObject).getString("className"));
+			st.setString(1, jsonObject.getString("className"));
+			st.setString(2, jsonObject.getString("classId"));
 
-            // Update the database
-            int code = st.executeUpdate();
-            System.out.println("----> code: " + code);
-            // Close the statement
-            st.close();
+			// Update the database
+			int code = st.executeUpdate();
+			System.out.println("----> code: " + code);
+			// Close the statement
+			st.close();
 
-            if (code > 0) {
-                sqlState.setCode(0);
-                sqlState.setMessage("Clase deleted successfully");
-            } else {
-                sqlState.setCode(-1);
-                sqlState.setMessage("Error when trying to delete Clase.");
-            }
-            return sqlState;
+			if (code > 0) {
+				sqlState.setCode(0);
+				sqlState.setMessage("Clase updated successfully");
+			} else {
+				sqlState.setCode(-1);
+				sqlState.setMessage("Error when trying to update Class.");
+			}
+			return sqlState;
 
-        } catch (SQLException err) {
-            sqlState.setCode(-1);
-            sqlState.setMessage(err.getMessage());
-            return sqlState;
-        }
-    }
+		} catch (SQLException err) {
+			sqlState.setCode(-1);
+			sqlState.setMessage(err.getMessage());
+			return sqlState;
+		}
+	}
 
-    @Override
-    public SQLState updateOneClass(JSONObject jsonObject) throws JSONException {
+	@Override
+	public SQLState saveNewClass(JSONObject jsonObject) {
+		SQLState sqlState = new SQLState();
+		System.out.println("-----> saveNewClase: ");
+		try {
+			String insert = " insert into classes (class_id, class_name) values (?, ?) ";
+			System.out.println("----> insert: " + insert);
+			PreparedStatement st = this.conn.prepareStatement(insert);
+			st.setString(1, (jsonObject).getString("classId"));
+			st.setString(2, (jsonObject).getString("className"));
+			int code = st.executeUpdate();
+			System.out.println("----> code: " + code);
+			st.close();
+			if (code > 0) {
+				sqlState.setCode(0);
+				sqlState.setMessage("Clase created successfully");
+			} else {
+				sqlState.setCode(-1);
+				sqlState.setMessage("Error when trying to create new Class.");
+			}
+			return sqlState;
 
-        SQLState sqlState = new SQLState();
-        System.out.println("-----> updateOneClase: ");
-        try {
-            // SQL String
-            String update = " update classes  set class_name = ? where class_id = ?";
-            System.out.println("----> Update: " + update);
-            PreparedStatement st = this.conn.prepareStatement(update);
-            System.out.println("classId: " + ( jsonObject).getString("classId"));
-            System.out.println("className: " + (jsonObject).getString("className"));
-            st.setString(1, jsonObject.getString("className"));
-            st.setString(2,  jsonObject.getString("classId"));
-
-            // Update the database
-            int code = st.executeUpdate();
-            System.out.println("----> code: " + code);
-            // Close the statement
-            st.close();
-
-            if (code > 0) {
-                sqlState.setCode(0);
-                sqlState.setMessage("Clase updated successfully");
-            } else {
-                sqlState.setCode(-1);
-                sqlState.setMessage("Error when trying to update Class.");
-            }
-            return sqlState;
-
-        } catch (SQLException err) {
-            sqlState.setCode(-1);
-            sqlState.setMessage(err.getMessage());
-            return sqlState;
-        }
-    }
-
-    @Override
-    public SQLState saveNewClass(JSONObject jsonObject) {
-
-        SQLState sqlState = new SQLState();
-        System.out.println("-----> saveNewClase: ");
-        try {
-            // SQL String
-            String insert = " insert into classes (class_id, class_name) values (?, ?) ";
-            System.out.println("----> insert: " + insert);
-            PreparedStatement st = this.conn.prepareStatement(insert);
-
-            st.setString(1, ( jsonObject).getString("classId"));
-            st.setString(2, ( jsonObject).getString("className"));
-
-            // Update the database
-            int code = st.executeUpdate();
-            System.out.println("----> code: " + code);
-            // Close the statement
-            st.close();
-
-            if (code > 0) {
-                sqlState.setCode(0);
-                sqlState.setMessage("Clase created successfully");
-            } else {
-                sqlState.setCode(-1);
-                sqlState.setMessage("Error when trying to create new Class.");
-            }
-            return sqlState;
-
-        } catch (SQLException err) {
-            sqlState.setCode(-1);
-            sqlState.setMessage(err.getMessage());
-            return sqlState;
-        } catch (Exception err) {
-            sqlState.setCode(-1);
-            sqlState.setMessage(err.getMessage());
-            return sqlState;
-        }
-    }
-
-
+		} catch (SQLException err) {
+			sqlState.setCode(-1);
+			sqlState.setMessage(err.getMessage());
+			return sqlState;
+		} catch (Exception err) {
+			sqlState.setCode(-1);
+			sqlState.setMessage(err.getMessage());
+			return sqlState;
+		}
+	}
 }
-

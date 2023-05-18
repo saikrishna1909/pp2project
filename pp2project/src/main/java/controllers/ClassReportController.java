@@ -25,121 +25,95 @@ import java.util.stream.Collectors;
 
 @WebServlet("/class-report-controller")
 public class ClassReportController extends HttpServlet {
-    private String message;
+	private String message;
 
-    public void init() {
-        message = "";
-    }
+	public void init() {
+		message = "";
+	}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        ClassReportDao studentDao = null;
-        try {
-            studentDao = new ClassReportDaoImpl();
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		ClassReportDao studentDao = null;
+		try {
+			studentDao = new ClassReportDaoImpl();
+		} catch (SQLException | ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
 
-        List<ClassFull> studentsList = null;
+		List<ClassFull> studentsList = null;
 
-        try {
-            studentsList = studentDao.getAllStudents();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+		try {
+			studentsList = studentDao.getAllStudents();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
 
-        List<Class> classesList = null;
+		List<Class> classesList = null;
+		try {
+			classesList = studentDao.getAllClasses();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		request.setAttribute("classesList", classesList);
+		request.setAttribute("studentsList", studentsList);
+		request.getRequestDispatcher("classReport.jsp").forward(request, response);
+	}
 
-        try {
-            classesList = studentDao.getAllClasses();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		StudentDao studentDao = null;
+		try {
+			studentDao = new StudentDaoImpl();
+		} catch (SQLException | ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			String jsonStringPOST = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+			JSONObject jsonObject = new JSONObject(jsonStringPOST);
+			System.out.println("jsonObject: " + jsonObject);
+			String action = (String) jsonObject.get("action");
+			System.out.println("action: " + action);
+			if (action.equals("fetchOneStudent")) {
+				String studentId = (String) jsonObject.get("studentId");
+				Student oneStudent = studentDao.fetchOneStudent(studentId);
+				String studentJsonString = new Gson().toJson(oneStudent);
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				System.out.println("studentJsonString" + studentJsonString);
+				out.println(studentJsonString);
+				out.flush();
+			}
+			if (action.equals("updateOneStudent")) {
+				assert studentDao != null;
+				SQLState sqlState = studentDao.updateOneStudent(jsonObject);
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				out.println(new Gson().toJson(sqlState));
+				out.flush();
+			}
+			if (action.equals("deleteOneStudent")) {
+				assert studentDao != null;
+				SQLState sqlState = studentDao.deleteOneStudent(jsonObject);
 
-        request.setAttribute("classesList", classesList);
-        request.setAttribute("studentsList", studentsList);
-        request.getRequestDispatcher("classReport.jsp").forward(request, response);
-    }
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				out.println(new Gson().toJson(sqlState));
+				out.flush();
+			}
+			if (action.equals("saveNewStudent")) {
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+				// Query the DB
+				SQLState sqlState = studentDao.saveNewStudent(jsonObject);
+				// Returns call originated in the client
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				out.println(new Gson().toJson(sqlState));
+				out.flush();
+			}
 
-        StudentDao studentDao = null;
-        try {
-            studentDao = new StudentDaoImpl();
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-
-        try {
-            // To read what the POST brings to the Servlet
-            String jsonStringPOST = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            JSONObject jsonObject = new JSONObject(jsonStringPOST);
-            System.out.println("jsonObject: " + jsonObject);
-            String action = (String) jsonObject.get("action");
-            System.out.println("action: " + action);
-
-            // ACTION ? fetchOneStudent
-            if (action.equals("fetchOneStudent")) {
-
-                //Query the DB
-                String studentId = (String) jsonObject.get("studentId");
-                Student oneStudent = studentDao.fetchOneStudent(studentId);
-
-                //Serialize the oneStudent object
-                String studentJsonString = new Gson().toJson(oneStudent);
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                System.out.println("studentJsonString" + studentJsonString);
-                out.println(studentJsonString);
-                out.flush();
-            }
-
-            // ACTION ? updateOneStudent or saveNewStudent
-            if (action.equals("updateOneStudent")) {
-
-                //Query the DB
-                assert studentDao != null;
-                SQLState sqlState = studentDao.updateOneStudent(jsonObject);
-
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                out.println(new Gson().toJson(sqlState));
-                out.flush();
-            }
-
-            // ACTION ? deleteOneStudent
-            if (action.equals("deleteOneStudent")) {
-
-                //Query the DB
-                assert studentDao != null;
-                SQLState sqlState = studentDao.deleteOneStudent(jsonObject);
-
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                out.println(new Gson().toJson(sqlState));
-                out.flush();
-            }
-
-            // ACTION ? saveNewStudent
-            if (action.equals("saveNewStudent")) {
-
-                //Query the DB
-                SQLState sqlState = studentDao.saveNewStudent(jsonObject);
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                out.println(new Gson().toJson(sqlState));
-                out.flush();
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void destroy() {
-    }
+	public void destroy() {
+	}
 }

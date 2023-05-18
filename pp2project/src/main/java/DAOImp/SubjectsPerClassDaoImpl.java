@@ -140,7 +140,7 @@ public class SubjectsPerClassDaoImpl implements SubjectsPerClassDao {
 			PreparedStatement st = this.conn.prepareStatement(insert);
 
 			st.setString(1, jsonObject.getString("classId"));
-			st.setString(2,  jsonObject.getString("subjectId"));
+			st.setString(2, jsonObject.getString("subjectId"));
 
 			// Update the database
 			int code = st.executeUpdate();

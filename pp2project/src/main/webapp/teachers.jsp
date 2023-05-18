@@ -1,105 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<%@ page import="java.util.List" %>
-<%@ page import="model.Teacher" %>
-<%@ page import="model.Class" %>
+<%@ page import="java.util.List"%>
+<%@ page import="model.Teacher"%>
+<%@ page import="model.Class"%>
 
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+	pageEncoding="UTF-8"%>
 <body>
 
-<br /><br />
-<div class="container">
-    <div class="col s12 m7">
-        <h2 class="header">Teachers</h2>
-        <div class="card horizontal">
-            
-            <div class="card-stacked">
-                <div class="card-content">
+	<br />
+	<br />
+	<div>
+		<div>
+			<h2>Teachers</h2>
+			<div>
 
-                    <table class="striped card-panel highlight" id="myTable">
-                        <thead>
-                        <tr>
-                            <th class="center-align">Edit</th>
-                            <th class="center-align">ID</th>
-                            <th class="center-align">&nbsp;</th>
-                            <th class="center-align">Teacher Name</th>
-                            <th class="center-align">Delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <%
-                            List<Teacher> teachersList = (List<Teacher>) request.getAttribute("teachersList");
+				<div>
+					<div>
 
-                            // Paint the rows of the teacher table
-                            for (Teacher teacher : teachersList) {
-                                out.println("");
-                                out.println("<tr><td class=\"center-align\">");
-                                out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + teacher.getTeacherId() +
-                                        "\")'>" +
-                                        "<i class=\"material-icons\">edit</i></a>");
-                                out.println("</td><td class=\"center-align\">");
-                                out.println(teacher.getTeacherId());
-                                out.println("</td><td>");
-                                out.println("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-                                out.println("</td><td>");
-                                out.println(teacher.getTeacherName());
-                                out.println("</td><td class=\"center-align\">");
-                                out.println("<a href='javascript:fOpenDelete(\"" + teacher.getTeacherId() +
-                                        "\")'><i class=\"material-icons\">delete</i></a>");
-                                out.println("</td></tr>");
-                            }
-                        %>
-                        </tbody>
-                    </table>
+						<table id="myTable">
+							<thead>
+								<tr>
+									<th>Edit</th>
+									<th>ID</th>
+									<th>&nbsp;</th>
+									<th>Teacher Name</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+								<%
+								List<Teacher> teachersList = (List<Teacher>) request.getAttribute("teachersList");
 
-
-                </div>
-                <div class="card-action">
-                    <div class="col-md-12 center text-center">
-                        <span class="left" id="total_reg"></span>
-                        <ul class="pagination pager" id="myPager"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a class="btn-floating btn-large right waves-effect waves-light red" href="javascript:fOpenNew();"><i class="material-icons">add</i></a>
-</div>
+								// Paint the rows of the teacher table
+								for (Teacher teacher : teachersList) {
+									out.println("");
+									out.println("<tr><td>");
+									out.println("<a class=\"modal-trigger\" href='javascript:fOpenEdit(\"" + teacher.getTeacherId() + "\")'>"
+									+ "<i class=\"material-icons\">edit</i></a>");
+									out.println("</td><td class=\"center-align\">");
+									out.println(teacher.getTeacherId());
+									out.println("</td><td>");
+									out.println("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+									out.println("</td><td>");
+									out.println(teacher.getTeacherName());
+									out.println("</td><td >");
+									out.println("<a href='javascript:fOpenDelete(\"" + teacher.getTeacherId()
+									+ "\")'><i class=\"material-icons\">delete</i></a>");
+									out.println("</td></tr>");
+								}
+								%>
+							</tbody>
+						</table>
 
 
-<!-- Modal Structure -->
-<div id="modal1" class="modal">
-    <form id="form1" class="col s12">
-  
-    <div class="modal-content">
-        <h4>Teacher Detail</h4>
-        <div id="contenido">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input type="text" id="teacherId" name="teacherId" value="">
-                        <label for="teacherId" class="active">Teacher</label>
-                    </div>
-                </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input type="text" id="teacherName" name="teacherName" value="">
-                    <label for="teacherName" class="active">Teacher Name</label>
-                </div>
-            </div>
-            <input type="hidden" id="action" name="action" value="">
-            <input type="hidden" id="deleteTeacherId" name="deleteTeacherId" value="">
+					</div>
+					<div>
+						<div>
+							<span id="total_reg"></span>
+							<ul id="myPager"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a href="javascript:fOpenNew();">add</a>
+	</div>
 
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-close waves-effect waves-light btn accent-color" type="submit"><i class="material-icons left">save
-        </i>Save Changes</button>
-    </div>
-    </form>
-</div>
 
-<script>
+	<!-- Modal Structure -->
+	<div>
+		<form id="form1">
+
+			<div>
+				<h4>Teacher Detail</h4>
+				<div id="contenido">
+					<div>
+						<div>
+							<input type="text" id="teacherId" name="teacherId" value="">
+							<label for="teacherId" class="active">Teacher</label>
+						</div>
+					</div>
+					<div>
+						<div>
+							<input type="text" id="teacherName" name="teacherName" value="">
+							<label for="teacherName" class="active">Teacher Name</label>
+						</div>
+					</div>
+					<input type="hidden" id="action" name="action" value=""> <input
+						type="hidden" id="deleteTeacherId" name="deleteTeacherId" value="">
+
+				</div>
+			</div>
+			<div>
+				<button type="submit">Save Changes</button>
+			</div>
+		</form>
+	</div>
+
+	<script>
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -114,8 +114,8 @@
 </script>
 
 
-<!--  Scripts-->
-<script>
+	<!--  Scripts-->
+	<script>
     async function fOpenEdit(pId) {
 
         // Set the action

@@ -22,113 +22,91 @@ import java.util.stream.Collectors;
 
 @WebServlet("/teacher-controller")
 public class TeacherController extends HttpServlet {
-    private String message;
+	private String message;
 
-    public void init() {
-        message = "";
-    }
+	public void init() {
+		message = "";
+	}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        TeacherDao teacherDao = null;
-        try {
-            teacherDao = new TeacherDaoImpl();
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		TeacherDao teacherDao = null;
+		try {
+			teacherDao = new TeacherDaoImpl();
+		} catch (SQLException | ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		List<Teacher> teachersList = null;
+		try {
+			teachersList = teacherDao.getAllTeachers();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		request.setAttribute("teachersList", teachersList);
+		request.getRequestDispatcher("teachers.jsp").forward(request, response);
+	}
 
-        List<Teacher> teachersList = null;
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        try {
-            teachersList = teacherDao.getAllTeachers();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+		TeacherDao teacherDao = null;
+		try {
+			teacherDao = new TeacherDaoImpl();
+		} catch (SQLException | ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			// To read what the POST brings to the Servlet
+			String jsonStringPOST = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+			JSONObject jsonObject = new JSONObject(jsonStringPOST);
+			System.out.println("jsonObject: " + jsonObject);
+			String action = (String) jsonObject.get("action");
+			System.out.println("action: " + action);
 
+			// ACTION ? fetchOneTeacher
+			if (action.equals("fetchOneTeacher")) {
 
-        request.setAttribute("teachersList", teachersList);
-        request.getRequestDispatcher("teachers.jsp").forward(request, response);
-    }
+				// Query the DB
+				String teacherId = (String) jsonObject.get("teacherId");
+				Teacher oneTeacher = teacherDao.fetchOneTeacher(teacherId);
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+				// Serialize the oneTeacher object
+				String teacherJsonString = new Gson().toJson(oneTeacher);
+				// Returns call originated in the client
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				System.out.println("teacherJsonString" + teacherJsonString);
+				out.println(teacherJsonString);
+				out.flush();
+			}
+			if (action.equals("updateOneTeacher")) {
+				assert teacherDao != null;
+				SQLState sqlState = teacherDao.updateOneTeacher(jsonObject);
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				out.println(new Gson().toJson(sqlState));
+				out.flush();
+			}
+			if (action.equals("deleteOneTeacher")) {
+				assert teacherDao != null;
+				SQLState sqlState = teacherDao.deleteOneTeacher(jsonObject);
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				out.println(new Gson().toJson(sqlState));
+				out.flush();
+			}
+			if (action.equals("saveNewTeacher")) {
+				// Query the DB
+				SQLState sqlState = teacherDao.saveNewTeacher(jsonObject);
+				// Returns call originated in the client
+				PrintWriter out = response.getWriter();
+				response.setContentType("application/json");
+				out.println(new Gson().toJson(sqlState));
+				out.flush();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-        TeacherDao teacherDao = null;
-        try {
-            teacherDao = new TeacherDaoImpl();
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-
-
-        try {
-            // To read what the POST brings to the Servlet
-            String jsonStringPOST = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            JSONObject jsonObject = new JSONObject(jsonStringPOST);
-            System.out.println("jsonObject: " + jsonObject);
-            String action = (String) jsonObject.get("action");
-            System.out.println("action: " + action);
-
-            // ACTION ? fetchOneTeacher
-            if (action.equals("fetchOneTeacher")) {
-
-                //Query the DB
-                String teacherId = (String) jsonObject.get("teacherId");
-                Teacher oneTeacher = teacherDao.fetchOneTeacher(teacherId);
-
-                //Serialize the oneTeacher object
-                String teacherJsonString = new Gson().toJson(oneTeacher);
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                System.out.println("teacherJsonString" + teacherJsonString);
-                out.println(teacherJsonString);
-                out.flush();
-            }
-
-            // ACTION ? updateOneTeacher or saveNewTeacher
-            if (action.equals("updateOneTeacher")) {
-
-                //Query the DB
-                assert teacherDao != null;
-                SQLState sqlState = teacherDao.updateOneTeacher(jsonObject);
-
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                out.println(new Gson().toJson(sqlState));
-                out.flush();
-            }
-
-            // ACTION ? deleteOneTeacher
-            if (action.equals("deleteOneTeacher")) {
-
-                //Query the DB
-                assert teacherDao != null;
-                SQLState sqlState = teacherDao.deleteOneTeacher(jsonObject);
-
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                out.println(new Gson().toJson(sqlState));
-                out.flush();
-            }
-
-            // ACTION ? saveNewTeacher
-            if (action.equals("saveNewTeacher")) {
-
-                //Query the DB
-                SQLState sqlState = teacherDao.saveNewTeacher(jsonObject);
-                // Returns call originated in the client
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/json");
-                out.println(new Gson().toJson(sqlState));
-                out.flush();
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void destroy() {
-    }
+	public void destroy() {
+	}
 }

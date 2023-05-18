@@ -11,11 +11,13 @@ import model.SQLState;
 import model.Student;
 
 public interface ClassDao {
-    public List<Class> getAllClasses() throws SQLException;
-    public Class fetchOneClass(String id) throws SQLException;
-    public SQLState updateOneClass(JSONObject jsonObject)throws SQLException, JSONException;
-    public SQLState deleteOneClass(JSONObject jsonObject)throws SQLException, JSONException;
-    public SQLState saveNewClass(JSONObject jsonObject)throws SQLException;
+	public List<Class> getAllClasses() throws SQLException;
+
+	public Class fetchOneClass(String id) throws SQLException;
+
+	public SQLState updateOneClass(JSONObject jsonObject) throws SQLException, JSONException;
+
+	public SQLState deleteOneClass(JSONObject jsonObject) throws SQLException, JSONException;
+
+	public SQLState saveNewClass(JSONObject jsonObject) throws SQLException;
 }
-
-
